@@ -1,0 +1,17 @@
+:root {
+  /* --- MODE LIGHT (DEFAULT) --- */
+  /* Background tombol: Hitam Pekat (Zinc 950) supaya teks putihnya menyala */
+  --glow-bg: oklch(14.1% 0.005 285.823); 
+  
+  /* Efek sinar glow: Menggunakan format RGB biasa agar komponen bisa membaca cahayanya */
+  --glow-line: "#a1a1aa";      /* Garis luar pembatas */
+}
+
+.dark {
+  /* --- MODE DARK --- */
+  /* Background tombol: Abu-abu Gelap Premium (Zinc 800) serasi dengan tombol lain */
+  --glow-bg: oklch(27.41% 0.005 286.03); 
+  
+  /* Efek sinar glow: Dibuat sedikit menyala tipis di latar belakang hitam */
+  --glow-line: "#52525b";     /* Garis luar pembatas (Zinc 600) */
+}

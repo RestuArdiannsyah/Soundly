@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Reenie+Beanie&display=swap");
+
+@import "tailwindcss";
+@variant dark (.dark &);
+
+.font-body {
+  font-family: "Poppins", sans-serif;
+}
+
+.font-reenie {
+  font-family: "Reenie Beanie", cursive;
+}
+
+.font-geist {
+  font-family: "Geist", sans-serif;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 60s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 60s linear infinite;
+}
+
+.animate-marquee:hover,
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* --color-primary: #299d91;
+  --color-secondary: #525256;
+  --color-defaultBlack: #191919;
+  --color-gray-01: #666666;
+  --color-gray-02: #878787;
+  --color-gray-03: #9f9f9f;
+  --color-gray-05: #e8e8e8;
+  --color-gray-06: #f3f3f3;
+  --color-special-bg: rgba(210, 210, 210, 0.25);
+  --color-special-bg2: rgba(255, 255, 255, 0.7);
+  --color-special-bg3: rgba(255, 255, 255, 0.08);
+  --color-special-mainBg: #f4f5f7;
+  --color-special-green: #4daf6e;
+  --color-special-red: #e73d1c;
+  --color-special-red2: #b83016; */
