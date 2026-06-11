@@ -19,6 +19,23 @@ const FormSend = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // STATE BARU UNTUK NOTIFIKASI TOAST
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success", // bisa 'success' atau 'error'
+  });
+
+  // Fungsi pembantu untuk memicu kemunculan Notifikasi
+  const triggerToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    
+    // Sembunyikan kembali setelah 3 detik
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3000);
+  };
+
   // Ambil Access Token Spotify di awal komponen dimuat
   useEffect(() => {
     const fetchToken = async () => {
@@ -102,29 +119,22 @@ const FormSend = () => {
     const message = e.target.message.value.trim();
 
     if (!recipientName || !message) {
-      alert("Please fill in all fields.");
+      triggerToast("Please fill in all fields.", "error"); // Menggunakan Toast kustom
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // 1. Ambil rujukan ke lokasi nama koleksi target "messages"
       const messagesCollectionRef = collection(db, "messages");
-
-      // 2. Buat dokumen kosong terlebih dahulu untuk mengunci ID uniknya di awal
       const newDocRef = doc(messagesCollectionRef);
       const messageId = newDocRef.id;
-
-      // 3. Susun URL kustom dinamis memanfaatkan ID dokumen tersebut
       const messageUrl = `https://thesoundly/messages/${messageId}`;
 
-      // Bersihkan struktur data musik dari properti undefined
       const spotifyMusicData = selectedTrack
         ? cleanUndefinedValues(selectedTrack.rawTrack)
         : null;
 
-      // 4. Gabungkan seluruh data ke dalam satu kesatuan objek dokumen
       const docData = {
         id: messageId,
         url: messageUrl,
@@ -134,10 +144,8 @@ const FormSend = () => {
         createdAt: serverTimestamp(),
       };
 
-      // 5. Eksekusi penyimpanan data permanen menggunakan perintah setDoc
       await setDoc(newDocRef, docData);
 
-      // === TAMBAHKAN LOGIKA INI DI BAWAHNYA ===
       const existingHistory =
         JSON.parse(localStorage.getItem("soundly_history_ids")) || [];
       existingHistory.push(messageId);
@@ -145,12 +153,12 @@ const FormSend = () => {
         "soundly_history_ids",
         JSON.stringify(existingHistory),
       );
-      // ========================================
 
       console.log("Document successfully written with ID: ", messageId);
       console.log("Generated Link URL: ", messageUrl);
 
-      alert("Message sent successfully!");
+      // NOTIFIKASI BERHASIL KUSTOM
+      triggerToast("Message sent successfully!", "success");
 
       // Reset form dan state ke kondisi kosong bawaan
       e.target.reset();
@@ -158,7 +166,7 @@ const FormSend = () => {
       setResults([]);
     } catch (error) {
       console.error("Error adding document to Firestore: ", error);
-      alert("Failed to send message. Please try again.");
+      triggerToast("Failed to send message. Please try again.", "error"); // Menggunakan Toast kustom
     } finally {
       setIsSubmitting(false);
     }
@@ -166,6 +174,34 @@ const FormSend = () => {
 
   return (
     <>
+      {/* ELEMEN TOAST NOTIFICATION DARI ATAS */}
+      <div
+        className={`fixed top-5 left-1/2 -translate-x-1/2 z-[999] w-full max-w-sm px-4 transition-all duration-500 ease-in-out ${
+          toast.show
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-24 opacity-0 pointer-events-none"
+        }`}
+      >
+        <div
+          className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-lg border text-sm font-medium ${
+            toast.type === "success"
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-200 dark:border-emerald-900"
+              : "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/80 dark:text-rose-200 dark:border-rose-900"
+          }`}
+        >
+          {toast.type === "success" ? (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-emerald-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/xl" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-rose-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          )}
+          <span className="flex-1">{toast.message}</span>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="mt-12 space-y-5 font-body">
         <InputLabel
           label="Recipient Name"
@@ -232,17 +268,17 @@ const FormSend = () => {
           <div className="w-full mt-2 transition-all duration-300">
             <iframe
               src={`https://open.spotify.com/embed/track/${selectedTrack.rawTrack.id}`}
-              width="50%"
               height="80"
               frameBorder="0"
               allowFullScreen=""
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
+              className=" lg:w-[50%] w-full"
             ></iframe>
           </div>
         )}
 
-        <div className="pt-2">
+        <div className="pb-32 lg:pt-2">
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Sending..." : "Send"}
           </Button>

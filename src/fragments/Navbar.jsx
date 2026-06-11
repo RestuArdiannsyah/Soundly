@@ -86,7 +86,7 @@ const Navbar = () => {
 
       {/* 2. BARIS BANNER PEMBERITAHUAN MIGRASI (BIRU) */}
       {showBanner && (
-        <div className="flex items-center justify-between w-full px-3 py-1 text-xs tracking-wide text-white bg-blue-600 sm:text-sm animate-slideDown lg:px-36 dark:bg-blue-700">
+        <div className="flex items-center justify-between w-full px-3 py-1 text-xs tracking-wide text-white bg-blue-800 sm:text-sm animate-slideDown lg:px-36 dark:bg-blue-900">
           <div className="flex-1 text-xs text-center lg:text-sm">
             🎉 Soundly is here! We’ve officially moved from{" "}
             <span className="font-medium underline decoration-indigo-200">

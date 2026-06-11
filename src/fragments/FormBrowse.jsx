@@ -110,7 +110,7 @@ const FormBrowse = () => {
 
         {/* CONDITION 2: Jika data pencarian ada, sembunyikan DesignGridWrapper dan render hasilnya */}
         {!isLoading && searchResults.length > 0 && (
-          <div className="grid w-full grid-cols-1 gap-4 mt-8 md:grid-cols-1 lg:grid-cols-2 lg:gap-6 animate-fadeIn">
+          <div className="grid w-full grid-cols-1 gap-4 pb-8 mt-8 lg:pb-0 md:grid-cols-1 lg:grid-cols-2 lg:gap-6 animate-fadeIn">
             {searchResults.map((message) => (
               <CardPreview
                 key={message.id}
